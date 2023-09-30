@@ -1,23 +1,22 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 public class Contact
 {
     [Key]
-    public int Id { get; set; }
+    public int ContactId { get; set; }
 
     [Required(ErrorMessage = "Pole 'Imię' jest wymagane.")]
     [MaxLength(50)]
     public string FirstName { get; set; }
 
     [Required(ErrorMessage = "Pole 'Nazwisko' jest wymagane.")]
-    [MaxLength(50)]
+    [MaxLength(100)]
     public string LastName { get; set; }
 
     [Required(ErrorMessage = "Pole 'Email' jest wymagane.")]
     [MaxLength(100)]
     [DataType(DataType.EmailAddress)]
-    [Index(IsUnique = true)] // Unikalny email
     public string Email { get; set; }
 
     [Required(ErrorMessage = "Pole 'Hasło' jest wymagane.")]
@@ -25,11 +24,15 @@ public class Contact
     [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$", ErrorMessage = "Hasło powinno spełniać podstawowe standardy złożoności.")]
     [DataType(DataType.Password)]
     public string Password { get; set; }
+    public ContactCategory ContactCategory { get; set; }
 
-    [Required(ErrorMessage = "Pole 'Kategoria' jest wymagane.")]
-    public ContactCategory Category { get; set; }
+    [ForeignKey("ContactCategory")]
 
-    public ContactSubCategory? SubCategory { get; set; }
+    public int CategoryId { get; set; }
+    public ContactSubCategory ContactSubCategory { get; set; }
+    [ForeignKey("ContactSubCategory")]
+
+    public int SubCategoryId { get; set; }
 
     [Required(ErrorMessage = "Pole 'Telefon' jest wymagane.")]
     [MaxLength(15)]
@@ -41,16 +44,24 @@ public class Contact
     public DateTime DateOfBirth { get; set; }
 }
 
-public enum ContactCategory
+public class ContactCategory
 {
-    Służbowy,
-    Prywatny,
-    Inny
+    [Key]
+    public int CategoryId { get; set; }
+
+    [Required(ErrorMessage = "Pole 'Kategoria' jest wymagane.")]
+    [MaxLength(50)]
+    public string Category { get; set; }
 }
 
-public enum ContactSubCategory
+public class ContactSubCategory
 {
-    Szef,
-    Klient,
-    Inna
+    [Key]
+    public int SubCategoryId { get; set; }
+
+    [MaxLength(255)]
+    public string SubCategory { get; set; }
+
+
+
 }
