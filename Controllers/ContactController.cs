@@ -74,10 +74,35 @@ namespace ContactsAPI.Controllers
         }
         // PUT contact
         [HttpPut("{id}")]
-        public IActionResult Put(Contact contact, int id)
+        public IActionResult Put([FromBody] Contact contactDto, int id)
         {
-            contact = _context.Contacts.FirstOrDefault(c => c.ContactId == id);
-            _context.Contacts.Update(contact);
+            var contact = _context.Contacts.FirstOrDefault(c => c.ContactId == id);
+            if (contact == null)
+            {
+                return NotFound();
+            }
+            contact.FirstName = contactDto.FirstName;
+            contact.LastName = contactDto.LastName;
+            contact.Email = contactDto.Email;
+            contact.Password = contactDto.Password;
+            contact.CategoryId = contactDto.CategoryId;
+            contact.SubCategoryId = contactDto.SubCategoryId;
+            contact.PhoneNumber = contactDto.PhoneNumber;
+            contact.DateOfBirth = contactDto.DateOfBirth;
+            contact.ContactCategory = contactDto.ContactCategory;
+            contact.ContactSubCategory = contactDto.ContactSubCategory;
+            // if there is already a ContactCategory with the same name, use that one
+            var existingContactCategory = _context.ContactCategory.FirstOrDefault(c => c.CategoryId == contactDto.ContactCategory.CategoryId);
+            if (existingContactCategory != null)
+            {
+                contact.ContactCategory = existingContactCategory;
+            }
+            // if there is already a ContactSubCategory with the same name, use that one
+            var existingContactSubCategory = _context.ContactSubCategory.FirstOrDefault(c => c.SubCategoryId == contactDto.ContactSubCategory.SubCategoryId);
+            if (existingContactSubCategory != null)
+            {
+                contact.ContactSubCategory = existingContactSubCategory;
+            }
             _context.SaveChanges();
             return Ok(contact);
         }
@@ -90,13 +115,22 @@ namespace ContactsAPI.Controllers
             _context.SaveChanges();
             return Ok(contact);
         }
-        [HttpGet]
-        [Route("GetBiggestId")]
-        public IActionResult GetBiggestId()
+        [HttpPost]
+        [Route("login")]
+        public IActionResult Login([FromBody] LoginRequest model)
         {
-            //Get the biggest SubCategory ID from the database
-            var biggestId = _context.ContactSubCategory.Max(c => c.SubCategoryId);
-            return Ok(biggestId);
+            var contact = _context.Contacts.FirstOrDefault(c => c.Email == model.Email && c.Password == model.Password);
+            if (contact == null)
+            {
+                return BadRequest(new { message = "Email or password is incorrect." });
+            }
+            return Ok(new { message = "Ok" });
         }
     }
+}
+
+public class LoginRequest
+{
+    public string Email { get; set; }
+    public string Password { get; set; }
 }
