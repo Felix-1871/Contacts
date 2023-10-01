@@ -10,9 +10,9 @@ It uses Nuxt as a frontend framework and .Net Web API with Microsoft SQL Server 
 ### Backend
 
 1. Clone the repository
-2. Open the solution in Visual Studio
-3. Open the Package Manager Console
-4. Run `Update-Database` to create the database
+2. Open the solution in Visual Studio or your editor of choice
+3. Open the Package Manager Console or terminal
+4. Run `Update-Database`/ `dotnet ef update-database` to create the database
 5. Run the project
 
 ### Frontend
