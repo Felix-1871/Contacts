@@ -9,11 +9,11 @@ It uses Nuxt as a frontend framework and .Net Web API with Microsoft SQL Server 
 
 ### Backend
 
-1. Clone the repository
-2. Open the solution in Visual Studio or your editor of choice
-3. Open the Package Manager Console or terminal
-4. Run `Update-Database`/ `dotnet ef update-database` to create the database
-5. Run the project
+1. Install .NET Core 3.1 SDK
+2. Install Entity Framework Core CLI
+3. Set connection string in user secrets
+4. Run `dotnet ef database update` in `Contacts.Backend` directory or `Update-Database` in VS Package Manager Console
+5. Run `dotnet run` in `Contacts.Backend` directory or run in VS Studio
 
 ### Frontend
 
