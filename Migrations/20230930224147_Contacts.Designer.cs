@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ContactsAPI.Migrations
 {
     [DbContext(typeof(ContactContext))]
-    [Migration("20230930144025_Contacts")]
+    [Migration("20230930224147_Contacts")]
     partial class Contacts
     {
         /// <inheritdoc />

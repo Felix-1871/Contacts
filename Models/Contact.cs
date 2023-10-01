@@ -49,7 +49,7 @@ public class ContactCategory
     [Key]
     public int CategoryId { get; set; }
 
-    [Required(ErrorMessage = "Pole 'Kategoria' jest wymagane.")]
+
     [MaxLength(50)]
     public string Category { get; set; }
 }

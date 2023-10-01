@@ -35,8 +35,39 @@ namespace ContactsAPI.Controllers
         }
         // POST contact
         [HttpPost]
-        public IActionResult Post(Contact contact)
+        public IActionResult Post([FromBody] Contact contactDto)
         {
+            var contact = new Contact
+            {
+                FirstName = contactDto.FirstName,
+                LastName = contactDto.LastName,
+                Email = contactDto.Email,
+                Password = contactDto.Password,
+                CategoryId = contactDto.CategoryId,
+                SubCategoryId = contactDto.SubCategoryId,
+                PhoneNumber = contactDto.PhoneNumber,
+                DateOfBirth = contactDto.DateOfBirth,
+                ContactCategory = contactDto.ContactCategory,
+                ContactSubCategory = contactDto.ContactSubCategory
+            };
+            // if there is already a ContactCategory with the same name, use that one
+            var existingContactCategory = _context.ContactCategory.FirstOrDefault(c => c.CategoryId == contactDto.ContactCategory.CategoryId);
+            if (existingContactCategory != null)
+            {
+                contact.ContactCategory = existingContactCategory;
+            }
+            // if there is already a ContactSubCategory with the same name, use that one
+            var existingContactSubCategory = _context.ContactSubCategory.FirstOrDefault(c => c.SubCategoryId == contactDto.ContactSubCategory.SubCategoryId);
+            if (existingContactSubCategory != null)
+            {
+                contact.ContactSubCategory = existingContactSubCategory;
+            }
+            //check if email is unique, if not, return error
+            var existingContact = _context.Contacts.FirstOrDefault(c => c.Email == contactDto.Email);
+            if (existingContact != null)
+            {
+                return BadRequest(new { message = "Email is already taken." });
+            }
             _context.Contacts.Add(contact);
             _context.SaveChanges();
             return Ok(contact);
